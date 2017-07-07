@@ -5,6 +5,7 @@ import argparse
 import time
 import asyncio
 import os
+import logging
 
 class Timer:
 
@@ -13,13 +14,14 @@ class Timer:
 
     def start(self):
         print("Starting Timer at ", time.strftime("%H:%M:%S", time.localtime()))
+        logging.info("Starting Timer at "+ time.strftime("%H:%M:%S", time.localtime()))
         time.sleep(self.timer)
         #notify("Timer", "Timer is up")
         self.finish()
 
     def finish(self):
         print("Ending Time: ", time.strftime("%H:%M:%S", time.localtime()))
-
+        logging.info("Ending Time: "+ time.strftime("%H:%M:%S", time.localtime()))
 
 def notify(title, text):
     os.system("""
@@ -27,6 +29,7 @@ def notify(title, text):
               """.format(text, title))
 
 if __name__ == "__main__":
+    logging.basicConfig(filename="timer.log",level=logging.INFO)
     parser= argparse.ArgumentParser()
     parser.add_argument("-s", help="set timer", action="store_true",dest="start",required=True)
     subparsers = parser.add_subparsers(title="time",help="time for the timer", dest="type")
@@ -40,9 +43,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     parser.add_argument("-p", help="pause the timer")
     timer=0
-    print(args)
+    logging.debug(args)
     if args.start:
-        print(args.start)
+        logging.debug(args.start)
         loop = asyncio.get_event_loop()
         if args.type == "minute":
             timer=args.minute * 60
@@ -50,6 +53,6 @@ if __name__ == "__main__":
             timer=args.hour * 60 * 60
         if args.type == "second":
             timer=args.seconds
-        print(timer)
+        logging.info("Starting the timer")
         timer = Timer(timer)
         timer.start()
