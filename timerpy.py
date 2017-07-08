@@ -14,8 +14,8 @@ class TimerPy:
         self.task_name = task_name
 
     def start(self):
-        print("Starting Timer at ", time.strftime("%H:%M:%S", time.localtime()))
-        logging.info("Starting Timer at "+ time.strftime("%H:%M:%S", time.localtime()))
+        print("Starting Timer for %s at "%(self.task_name), time.strftime("%H:%M:%S", time.localtime()))
+        logging.info("Starting Timer %s at "%(self.task_name) + time.strftime("%H:%M:%S", time.localtime()))
 
     def finish(self):
         notify("Timer", "Timer for %s is up" %(self.task_name))
@@ -28,7 +28,7 @@ def notify(title, text):
               """.format(text, title))
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="timer.log",level=logging.INFO)
+    logging.basicConfig(filename="timer.log",level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     parser= argparse.ArgumentParser()
     parser.add_argument("-s", help="set timer", action="store_true",dest="start",required=True)
     subparsers = parser.add_subparsers(title="time",help="time for the timer", dest="type")

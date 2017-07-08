@@ -1,2 +1,6 @@
 .idea/*
+timer/*
 timer.log
+build/*
+dist/*
+timerpy.egg-info/*
