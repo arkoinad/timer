@@ -3,25 +3,24 @@
 
 import argparse
 import time
-import asyncio
 import os
 import logging
+from threading import Timer
 
-class Timer:
+class TimerPy:
 
-    def __init__(self, time):
-        self.timer = timer
+    def __init__(self, time, task_name):
+        self.duration = time
+        self.task_name = task_name
 
     def start(self):
         print("Starting Timer at ", time.strftime("%H:%M:%S", time.localtime()))
         logging.info("Starting Timer at "+ time.strftime("%H:%M:%S", time.localtime()))
-        time.sleep(self.timer)
-        #notify("Timer", "Timer is up")
-        self.finish()
 
     def finish(self):
+        notify("Timer", "Timer for %s is up" %(self.task_name))
         print("Ending Time: ", time.strftime("%H:%M:%S", time.localtime()))
-        logging.info("Ending Time: "+ time.strftime("%H:%M:%S", time.localtime()))
+        logging.info("Ending Time for %s: "%(self.task_name)+ time.strftime("%H:%M:%S", time.localtime()))
 
 def notify(title, text):
     os.system("""
@@ -42,17 +41,20 @@ if __name__ == "__main__":
     parser.add_argument("--name", dest="task_name", type=str)
     args = parser.parse_args()
     parser.add_argument("-p", help="pause the timer")
-    timer=0
+    duration=0
     logging.debug(args)
     if args.start:
         logging.debug(args.start)
-        loop = asyncio.get_event_loop()
         if args.type == "minute":
-            timer=args.minute * 60
+            duration=args.minute * 60
         if args.type == "hour":
-            timer=args.hour * 60 * 60
+            duration=args.hour * 60 * 60
         if args.type == "second":
-            timer=args.seconds
+            duration=args.seconds
         logging.info("Starting the timer")
-        timer = Timer(timer)
+        timer = TimerPy(duration, args.task_name)
         timer.start()
+        print(duration)
+        t=Timer(duration, timer.finish)
+        t.start()
+
