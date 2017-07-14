@@ -5,6 +5,7 @@ import argparse
 import time
 import os
 import logging
+from sys import platform
 from threading import Timer
 
 class TimerPy:
@@ -23,9 +24,12 @@ class TimerPy:
         logging.info("Ending Time for %s: "%(self.task_name)+ time.strftime("%H:%M:%S", time.localtime()))
 
 def notify(title, text):
-    os.system("""
+    if platform == 'darwin':
+        os.system("""
               osascript -e 'display notification "{}" with title "{}"'
               """.format(text, title))
+    elif platform == 'linux':
+        print("%s" %(text))
 
 if __name__ == "__main__":
     logging.basicConfig(filename="timer.log",level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
